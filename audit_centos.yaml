@@ -1,5 +1,5 @@
 ---
-# reboot.yml
+# Audit to check if latest keyword exists in repo.yml
 # Common env variables
 - hosts: all
   vars:
@@ -23,8 +23,8 @@
       debug:
        var=ansible_date_time
 
-    - name: Hostname Creation IN /tmp/servername**.txt
-      shell: hostname > /tmp/servername_{{ ansible_date_time.date}}.txt
+#    - name: Hostname Creation IN /tmp/servername**.txt
+#      shell: hostname > /tmp/servername_{{ ansible_date_time.date}}.txt
 
     - name: Get hostname
       shell: echo $HOSTNAME
@@ -33,12 +33,12 @@
     - debug: msg=our hostname is "{{ hostname.stdout }}"
 
 
-    - name: Ensure yumbackup directory /root/yumbackup exists
-      file:
-        path: /root/yumbackup
-        state: directory
-        group: root
-        mode: 02770
+#    - name: Ensure yumbackup directory /root/yumbackup exists
+#      file:
+#        path: /root/yumbackup
+#        state: directory
+#        group: root
+#        mode: 02770
        
 
 #    - name: Create yumbackup directory folder for today
