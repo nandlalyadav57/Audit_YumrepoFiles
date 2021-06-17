@@ -30,7 +30,7 @@
       shell: echo $HOSTNAME
       register: hostname
       
-    - debug: msg=our hostname is "{{ hostname.stdout }}"
+    - debug: msg="{{ hostname.stdout }}"
 
     - name: Check OS Version
       shell: cat /etc/system-release
@@ -82,13 +82,13 @@
       shell: grep i latest /etc/yum.repos.d/centos*.repo|awk '{print}' ORS='" '
       register: cent_latest_keyword
       
-    - debug: msg=our hostname is "{{ cent_latest_keyword.stdout }}"
+    - debug: msg="{{ cent_latest_keyword.stdout }}"
     
     - name: Get Latest Keyword in epel.repo
       shell: grep -i latest /etc/yum.repos.d/epel*.repo|awk '{print}' ORS='" '
       register: epel_latest_keyword        
 
-    - debug: msg=our hostname is "{{ epel_latest_keyword.stdout }}"        
+    - debug: msg="{{ epel_latest_keyword.stdout }}"        
       
      #- name: Display output Report
      #  debug: report={{ hostname.stdout }} ,{{ cent_latest_keyword.stdout }} , {{ epel_latest_keyword.stdout }}
@@ -109,7 +109,7 @@
 
     - name: Transfer file from Host to AWX
       synchronize:
-        src: /tmp/csv/
+        src: /tmp/csv/*.csv
         dest: /tmp/csv/
         mode: pull
       delegate_to: phn1v-admweb01
