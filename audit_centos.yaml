@@ -32,7 +32,13 @@
       
     - debug: msg=our hostname is "{{ hostname.stdout }}"
 
+    - name: Check OS Version
+      shell: cat /etc/system-release
+      register: OSVer
 
+#Use commnad cat /etc/system-release | awk '{print $4}' in case we want to apply template based on major minor version of CentOS or use rpm --eval '%{centos_ver}'
+
+    - debug: msg="{{ OSVer.stdout }}"
 #    - name: Ensure yumbackup directory /root/yumbackup exists
 #      file:
 #        path: /root/yumbackup
@@ -80,10 +86,11 @@
       lineinfile:
            insertafter: EOF
            dest: /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
-           line: "{{ item.0 }},{{ item.1 }},{{ item.2 }}"
+           line: "{{ item.0 }},{{ item.1 }},{{ item.2 }},{{ item.3 }}"
 
       with_together:
            - "{{ hostname.stdout }}"
+           - "{{ OSVer.stdout }}"
            - "{{ cent_latest_keyword.stdout }}"
            - "{{ epel_latest_keyword.stdout }}"
 
