@@ -50,9 +50,9 @@
 
          
     - name: Create file
-      command: touch /tmp/test_{{ ansible_date_time.date}}.csv
+      command: touch /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
       args:
-        creates: /tmp/test_{{ ansible_date_time.date}}.csv
+        creates: /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
 
 
 #    - name: Take backup of yum repo files to  /root/yumbackup/ 
@@ -79,7 +79,7 @@
     - name: Get a report on CSV format
       lineinfile:
            insertafter: EOF
-           dest: /tmp/test_{{ ansible_date_time.date}}.csv
+           dest: /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
            line: "{{ item.0 }},{{ item.1 }},{{ item.2 }}"
 
       with_together:
