@@ -54,11 +54,22 @@
 #        group: root
 #        mode: 02770
 
-         
-    - name: Create file
-      command: touch /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
+    - name: Ensure /tmp/csv exists
+      file:
+        path: /tmp/csv
+        state: directory
+
+
+
+    - name: Remove existing csv file of today
+      file:
+        path: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
+        state: absent
+        
+    - name: Create a blank csv file
+      command: touch /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
       args:
-        creates: /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
+        creates: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
 
 
 #    - name: Take backup of yum repo files to  /root/yumbackup/ 
@@ -85,7 +96,7 @@
     - name: Get a report on CSV format
       lineinfile:
            insertafter: EOF
-           dest: /tmp/test_{{ ansible_date_time.iso8601_basic_short}}.csv
+           dest: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
            line: "{{ item.0 }},{{ item.1 }},{{ item.2 }},{{ item.3 }}"
 
       with_together:
@@ -93,6 +104,13 @@
            - "{{ OSVer.stdout }}"
            - "{{ cent_latest_keyword.stdout }}"
            - "{{ epel_latest_keyword.stdout }}"
+           
+           
 
-
+    - name: Transfer file from Host to AWX
+      synchronize:
+        src: /tmp/csv/
+        dest: /tmp/csv/
+        mode: pull
+      delegate_to: phn1v-admweb01
     
