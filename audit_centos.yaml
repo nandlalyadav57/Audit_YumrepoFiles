@@ -1,0 +1,91 @@
+---
+# reboot.yml
+# Common env variables
+- hosts: all
+  vars:
+    gather_facts: no
+    become: true
+    #become_method: sudo
+    #remote_user: ubuntu
+    #ansible_ssh_user: ubuntu
+    become_user: root
+    #private_key_file: /path/to/file.pem
+    ansible_ssh_port: 22
+    ssh_args: -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null
+    #vault_password_file: /root/.vault_pass
+
+  tasks:
+    - name: Display Hostname
+      shell: hostname
+      become: true
+
+    - name: Display the current timestamp in YYYY-MM-DD
+      debug:
+       var=ansible_date_time
+
+    - name: Hostname Creation IN /tmp/servername**.txt
+      shell: hostname > /tmp/servername_{{ ansible_date_time.date}}.txt
+
+    - name: Get hostname
+      shell: echo $HOSTNAME
+      register: hostname
+      
+    - debug: msg=our hostname is "{{ hostname.stdout }}"
+
+
+    - name: Ensure yumbackup directory /root/yumbackup exists
+      file:
+        path: /root/yumbackup
+        state: directory
+        group: root
+        mode: 02770
+       
+
+#    - name: Create yumbackup directory folder for today
+#      file:
+#        path: /root/yumbackup/{{ hostname.stdout }}_yum.repos.d{{ ansible_date_time.iso8601_basic_short }}
+#        state: directory
+#        group: root
+#        mode: 02770
+
+         
+    - name: Create file
+      command: touch /tmp/test_{{ ansible_date_time.date}}.csv
+      args:
+        creates: /tmp/test_{{ ansible_date_time.date}}.csv
+
+
+#    - name: Take backup of yum repo files to  /root/yumbackup/ 
+#      copy:
+#        src: /etc/yum.repos.d/
+#        dest: /root/yumbackup/{{ hostname.stdout }}_yum.repos.d{{ ansible_date_time.iso8601_basic_short }}
+
+           
+    - name: Get Latest Keyword in centos.repo
+      shell: grep i latest /etc/yum.repos.d/centos*.repo|awk '{print}' ORS='" '
+      register: cent_latest_keyword
+      
+    - debug: msg=our hostname is "{{ cent_latest_keyword.stdout }}"
+    
+    - name: Get Latest Keyword in epel.repo
+      shell: grep -i latest /etc/yum.repos.d/epel*.repo|awk '{print}' ORS='" '
+      register: epel_latest_keyword        
+
+    - debug: msg=our hostname is "{{ epel_latest_keyword.stdout }}"        
+      
+     #- name: Display output Report
+     #  debug: report={{ hostname.stdout }} ,{{ cent_latest_keyword.stdout }} , {{ epel_latest_keyword.stdout }}
+        
+    - name: Get a report on CSV format
+      lineinfile:
+           insertafter: EOF
+           dest: /tmp/test_{{ ansible_date_time.date}}.csv
+           line: "{{ item.0 }},{{ item.1 }},{{ item.2 }}"
+
+      with_together:
+           - "{{ hostname.stdout }}"
+           - "{{ cent_latest_keyword.stdout }}"
+           - "{{ epel_latest_keyword.stdout }}"
+
+
+    
