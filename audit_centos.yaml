@@ -107,13 +107,13 @@
 
 
 
-    - name: Copy the file from Host to phn1v-admweb01 using Method Push
+    - name: Copy the file from Host to phi1v-opsawx01 using Method Push
       tags: sync-push
       synchronize:
         src: "{{ item }}"
         dest: "{{ item }}"
         mode: push
-      delegate_to: "phn1v-admweb01"
+      delegate_to: "phi1v-opsawx01"
       register: syncfile
       with_items:
       - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
