@@ -114,7 +114,7 @@
         src: "{{ item }}"
         dest: "{{ item }}"
         mode: push
-      delegate_to: phi1v-opsawx01
+      delegate_to: 10.19.102.113
       register: syncfile
       with_items:
       - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
