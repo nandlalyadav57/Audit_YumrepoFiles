@@ -109,17 +109,17 @@
     - name: Sync Push task - Executed on source host 
       hosts: phi1v-opsawx01 
       user: TeamCityAgent
-      tasks:
-        - name: Copy the file from Host to phi1v-opsawx01 using Method Push
-          tags: sync-push
-          synchronize:
-            src: "{{ item }}"
-            dest: "{{ item }}"
-            mode: push
-          delegate_to: "{{groups['app'][0]}}"
-          register: syncfile
-          with_items:
-          - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
+      
+    - name: Copy the file from Host to phi1v-opsawx01 using Method Push
+      tags: sync-push
+      synchronize:
+        src: "{{ item }}"
+        dest: "{{ item }}"
+        mode: push
+      delegate_to: "{{groups['app'][0]}}"
+      register: syncfile
+      with_items:
+      - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
             
 #    - name: Download file from Remote Machine to Local ansible-node directory
 #      become: yes
