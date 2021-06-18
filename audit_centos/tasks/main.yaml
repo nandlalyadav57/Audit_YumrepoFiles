@@ -61,7 +61,7 @@
 
 
 
-    - name: Remove existing csv file of today
+    - name: Remove any existing csv file with today's date
       file:
         path: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
         state: absent
@@ -69,7 +69,7 @@
 
     - name: Create a Template csv file
       template:
-          src: report.j2
+          src: report.csv.j2
           dest: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
           owner: root
           group: root
