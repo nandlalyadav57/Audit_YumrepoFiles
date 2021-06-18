@@ -69,11 +69,11 @@
 
     - name: Create a Template csv file
       template:
-          src: report.csv.j2
+          src: centos_audit_report.csv.j2
           dest: /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
-          owner: root
-          group: root
-          mode: '0600'
+#          owner: root
+#          group: root
+#          mode: '0600'
 
 #    - name: Create a blank csv file
 #      command: touch /tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv
