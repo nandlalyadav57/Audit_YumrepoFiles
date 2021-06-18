@@ -106,20 +106,17 @@
            - "{{ epel_latest_keyword.stdout }}"
 
 
-    - name: Sync Push task - Executed on source host "{{groups['app'][0]}}"
-      hosts: all 
-      user: TeamCityAgent
-      tasks:
-        - name: Copy the file from mwiapp01 to mwiapp02 using Method Push
-          tags: sync-push
-          synchronize:
-            src: "{{ item }}"
-            dest: "{{ item }}"
-            mode: push
-          delegate_to: "phn1v-admweb01"
-          register: syncfile
-          with_items:
-          - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
+
+    - name: Copy the file from Host to phn1v-admweb01 using Method Push
+      tags: sync-push
+      synchronize:
+        src: "{{ item }}"
+        dest: "{{ item }}"
+        mode: push
+      delegate_to: "phn1v-admweb01"
+      register: syncfile
+      with_items:
+      - "/tmp/csv/test_{{ hostname.stdout }}_{{ ansible_date_time.date}}.csv"
            
 #    - name: Download file from Remote Machine to Local ansible-node directory
 #      become: yes
